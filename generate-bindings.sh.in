@@ -16,4 +16,5 @@
   "@CMAKE_SOURCE_DIR@/include/@PROJECT_NAME@.h" -o "@PROJECT_NAME@.json"
 
 # Use the json representation to generate a PXD
-"@CTYPESGEN_TO_PXD_PATH@" "@PROJECT_NAME@.json" "@PROJECT_NAME@.pxd"
+"@CTYPESGEN_TO_PXD_PATH@" "@PROJECT_NAME@.json" "@PROJECT_NAME@.pxd" \
+  --force_forwards NativeCallbacks_t

@@ -49,7 +49,7 @@ EXPORT NativeResult Call_Callback(NativeLibHdl libHandle, NativeCallbacksHdl cal
 
 // Define our callback func here and use our opaque struct here
 typedef NativeResult (*CallbackFunc)(NativeLibHdl libHandle);
-struct NativeStruct
+struct NativeCallbacks_t
 {
     CallbackFunc callback;    
 };
