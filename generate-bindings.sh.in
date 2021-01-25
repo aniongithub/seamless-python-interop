@@ -4,17 +4,4 @@
 "@CTYPESGEN_PATH@" \
   --no-macro-warnings \
   -I "@CMAKE_SOURCE_DIR@/include" -L "@CMAKE_BINARY_DIR@" -l "lib@PROJECT_NAME@.so" \
-  "@CMAKE_SOURCE_DIR@/include/@PROJECT_NAME@.h" -o "@CMAKE_CURRENT_BINARY_DIR@/@PROJECT_NAME@.py"
-
-# Generate pxd file for Cython using ctypesgen_to_pxd
-
-# First generate a json file using ctypesgen
-"@CTYPESGEN_PATH@" \
-  --no-macro-warnings \
-  --output-language=json \
-  -I "@CMAKE_SOURCE_DIR@/include" -L "@CMAKE_BINARY_DIR@" -l "lib@PROJECT_NAME@.so" \
-  "@CMAKE_SOURCE_DIR@/include/@PROJECT_NAME@.h" -o "@PROJECT_NAME@.json"
-
-# Use the json representation to generate a PXD
-"@CTYPESGEN_TO_PXD_PATH@" "@PROJECT_NAME@.json" "@PROJECT_NAME@.pxd" \
-  --force_forwards NativeCallbacks_t
+  "@CMAKE_SOURCE_DIR@/include/@PROJECT_NAME@.h" -o "@PROJECT_NAME@.py"

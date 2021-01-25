@@ -5,14 +5,14 @@
 #include <stdbool.h>
 
 // Native headers have enums
-enum NativeResult_t
+enum NativeResult
 {
     RESULT_INVALID_ARGS = -3,
     RESULT_NOT_IMPLEMENTED = -2,
     RESULT_ERROR = -1,
     RESULT_OK = 0,
 };
-typedef enum NativeResult_t NativeResult;
+typedef enum NativeResult NativeResult;
 
 // Example of an opaque struct, used often for hiding internal
 // native impleentation details from the consumer
@@ -22,25 +22,25 @@ typedef NativeLib* NativeLibHdl;
 
 // Using a struct to contain our callback(s) as it's a 
 // common pattern for (asynchronous) C interfaces
-struct NativeCallbacks_t;
-typedef struct NativeCallbacks_t NativeCallbacks;
+struct NativeCallbacks;
+typedef struct NativeCallbacks NativeCallbacks;
 typedef NativeCallbacks* NativeCallbacksHdl;
 
 // Enum to let our library know how to find/populate
 // the callback function pointer
-enum CallbackType_t
+enum CallbackType
 {
-    NATIVE, // Uses a simple dlsym lookup to find a function pointer
-    PYTHON // Uses Cython to call into a Python callback
+    NATIVE_CALLBACK, // Uses a simple dlsym lookup to find a function pointer
+    PYTHON_CALLBACK // Uses Cython to call into a Python callback
 };
-typedef enum CallbackType_t CallbackType;
+typedef enum CallbackType CallbackType;
 
-struct CallbackParams_t
+struct CallbackParams
 {
     const char* callbackName;
     CallbackType callbackType;
 };
-typedef struct CallbackParams_t CallbackParams;
+typedef struct CallbackParams CallbackParams;
 
 #ifdef __cplusplus
 extern "C" {
@@ -52,20 +52,16 @@ EXPORT NativeResult Init(NativeLibHdl* libHdl);
 EXPORT NativeResult Destroy(NativeLibHdl* libHdl);
 
 // Function to find a callback and store the native-callable function pointer in NativeCallbacksHdl
-EXPORT NativeResult Get_Callback(NativeLibHdl libHandle, CallbackParams params, NativeCallbacksHdl callbacksHdl);
+EXPORT NativeResult Get_Callback(NativeLibHdl libHdl, CallbackParams params, NativeCallbacksHdl callbacksHdl);
 
 // Function that invokes the callback from the NativeCallbacksHdl provided
-EXPORT NativeResult Call_Callback(NativeLibHdl libHandle, NativeCallbacksHdl callbacksHdl);
+EXPORT NativeResult Call_Callback(NativeLibHdl libHdl, NativeCallbacksHdl callbacksHdl);
 
 #ifdef __cplusplus
 }
 #endif
 
 // Define our callback func here
-typedef NativeResult (*CallbackFunc)(NativeLibHdl libHandle);
-
-// Declare our forward declared struct now
-struct NativeCallbacks_t
-{
-    CallbackFunc callback;    
-};
+// typedef NativeResult (*CallbackFunc)(NativeLibHdl libHandle);
+struct CallbackFunc;
+typedef struct CallbackFunc* CallbackFuncHdl;

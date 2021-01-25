@@ -2,17 +2,8 @@ import sys
 sys.path.insert(0, '')
 
 from ctypes import *
-import nativelib as n
+from nativelib import *
 
-libHdl = n.NativeLibHdl()
-result = n.Init(byref(libHdl))
-if result != n.RESULT_OK:
-    print("Could not initialize native lib!")
-
-print("Initialized nativelib!")
-
-result = n.Destroy(byref(libHdl))
-if result != n.RESULT_OK:
-    print("Could not destroy native lib!")
-
-print("Destroyed nativelib!")
+def python_callback(libHdl: NativeLibHdl) -> NativeResult:
+    print("Hello from a python callback!")
+    return NativeResult(RESULT_OK)

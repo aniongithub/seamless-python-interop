@@ -4,39 +4,24 @@ project(nativelib VERSION 0.1 DESCRIPTION "Shared native C library")
 
 # Find all the tools we need to generate bindings here
 find_program(CTYPESGEN_PATH ctypesgen REQUIRED)
-find_program(CTYPESGEN_TO_PXD_PATH ctypesgen_to_pxd REQUIRED)
 find_program(CYTHON3 cython3 REQUIRED)
 find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
+find_package(Boost COMPONENTS python${Python3_VERSION_MAJOR}${Python3_VERSION_MINOR} REQUIRED)
 
 # Configure our shell script that does all the bindings generation
 configure_file(generate-bindings.sh.in generate-bindings.sh @ONLY)
+configure_file(callbacks.py callbacks.py)
 
 # Add a custom command and a target that ALL depends on
+message("${Python3_SITELIB}")
 add_custom_command(OUTPUT 
     ${PROJECT_NAME}.py
-    ${PROJECT_NAME}.pxd
     COMMAND ./generate-bindings.sh
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 add_custom_target(python_bindings ALL DEPENDS ${PROJECT_NAME}.py)
 
-# Configure our pyx file with Cython interop functions
-configure_file(cythoncallbacks.pyx.in cythoncallbacks.pyx @ONLY)
-
-# Cythonize the configured pyx file
-add_custom_command(OUTPUT 
-        cythoncallbacks.c 
-        cythoncallbacks.h 
-    COMMAND ${CYTHON3} --working ${CMAKE_CURRENT_BINARY_DIR} cythoncallbacks.pyx
-    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
-add_custom_target(cython_bindings ALL DEPENDS 
-    cythoncallbacks.h 
-    cythoncallbacks.c)
-add_dependencies(cython_bindings python_bindings)
-
 # Add top level native target
-add_library(${PROJECT_NAME} SHARED 
-    main.cpp
-    ${CMAKE_CURRENT_BINARY_DIR}/cythoncallbacks.c) # Include generated Cython source
+add_executable(${PROJECT_NAME} main.cpp)
 
 add_dependencies(${PROJECT_NAME} python_bindings)
 
@@ -51,4 +36,5 @@ target_include_directories(${PROJECT_NAME}
         ${Python3_INCLUDE_DIRS})
 target_link_libraries(${PROJECT_NAME}
     PUBLIC
-        ${Python3_LIBRARIES})
+        ${Python3_LIBRARIES}
+        ${Boost_LIBRARIES})

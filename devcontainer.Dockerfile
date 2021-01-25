@@ -46,11 +46,6 @@ RUN cd /usr/local/src &&\
 RUN apt-get install -y \
     build-essential clang clang-format
 
-# Install ctypesgen to pxd for Cython bindings
-ARG CTYPESGEN_TO_PXD_TAG=feature-force-forwards
-WORKDIR /usr/local/src/ctypesgen_to_pxd
-RUN cd /usr/local/src &&\
-    git clone https://github.com/aniongithub/ctypesgen_to_pxd.git &&\
-    cd ctypesgen_to_pxd &&\
-    git checkout ${CTYPESGEN_TO_PXD_TAG} &&\
-    ln -sfn /usr/local/src/ctypesgen_to_pxd/ctypesgen_to_pxd.py /usr/local/bin/ctypesgen_to_pxd
+# Install boost python
+RUN apt-get install -y \
+        libboost-python-dev
