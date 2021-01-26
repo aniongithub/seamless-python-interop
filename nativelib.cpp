@@ -71,8 +71,7 @@ NativeResult Call_Callback(NativeLibHdl libHdl, NativeCallbacksHdl callbacksHdl)
     
     try
     {
-        callback(libHdl);
-        return RESULT_OK;
+        return callback(libHdl);
     }
     catch(const std::exception& e)
     {

@@ -62,7 +62,7 @@ EXPORT NativeResult Call_Callback(NativeLibHdl libHandle, NativeCallbacksHdl cal
 #endif
 
 // Define our callback func here
-typedef void (*CallbackFunc)(NativeLibHdl libHandle);
+typedef NativeResult (*CallbackFunc)(NativeLibHdl libHandle);
 typedef CallbackFunc* CallbackFuncHdl;
 
 // Declare our forward declared struct now

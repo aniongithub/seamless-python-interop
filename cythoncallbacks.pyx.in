@@ -7,13 +7,14 @@ from ctypes import *
 from nativelib cimport *
 import nativelib as n
 
-def foo(libHdl: n.NativeLibHdl):
+def foo(libHdl: n.NativeLibHdl) -> n.NativeResult:
     print("Do stuff in a CFUNCTYPE Python function here...")
+    return n.RESULT_OK
 
 cdef public NativeResult Getcallbacks_Cython(NativeLibHdl libHdl, CallbackParams params, NativeCallbacksHdl callbacksHdl):
-    @CFUNCTYPE(None, n.NativeLibHdl)
-    def python_cfunctype_callback(libHdl) -> n.NativeResult:
-        foo(libHdl)
+    @CFUNCTYPE(n.NativeResult, n.NativeLibHdl)
+    def python_cfunctype_callback(libHdl):
+        return foo(libHdl)
 
     callbacksHdl.callback = (<CallbackFunc*><size_t>(addressof(python_cfunctype_callback)))
     return RESULT_OK
