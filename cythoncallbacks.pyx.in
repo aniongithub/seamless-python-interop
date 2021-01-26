@@ -7,37 +7,13 @@ from ctypes import *
 from nativelib cimport *
 import nativelib as n
 
-
-@CFUNCTYPE(UNCHECKED(n.NativeResult), n.NativeLibHdl)
-def python_cfunctype_callback(libHdl) -> n.NativeResult:
+def foo(libHdl: n.NativeLibHdl):
     print("Do stuff in a CFUNCTYPE Python function here...")
-    return n.NativeResult(n.RESULT_OK)
 
-def python_regular_callback(libHdl: n.NativeLibHdl) -> n.NativeResult:
-    print("Do stuff in a regular Python callback here...")
-    return n.NativeResult(n.RESULT_OK)
+cdef public NativeResult Getcallbacks_Cython(NativeLibHdl libHdl, CallbackParams params, NativeCallbacksHdl callbacksHdl):
+    @CFUNCTYPE(None, n.NativeLibHdl)
+    def python_cfunctype_callback(libHdl) -> n.NativeResult:
+        foo(libHdl)
 
-cdef public NativeResult cythoncallbacks_getcallbacks(NativeLibHdl libHdl, CallbackParams params, NativeCallbacksHdl callbacksHdl):
-    # How do I call python_cfunctype_callback or python_regular_callback from here?
-    # Both ways below won't compile
-
-    ###################################################
-    
-    # Errors out with
-    # Cannot convert Python object to CallbackFunc* or
-    # From https://stackoverflow.com/a/33485103/802203
-    
-    # callbacksHdl.callback = python_cfunctype_callback
-
-    ###################################################
-    
-    # Errors out with
-    # Storing unsafe C derivative of temporary Python reference
-    # from https://stackoverflow.com/questions/2038839/python-ctypes-addressof-cfunctype
-    
-    # callbacktype = CFUNCTYPE(UNCHECKED(n.NativeResult), n.NativeLibHdl)
-    # callbacksHdl.callback = callbacktype(python_cfunctype_callback)
-
-    ####################################################################################
-
-    return NativeResult(RESULT_NOT_IMPLEMENTED)
+    callbacksHdl.callback = (<CallbackFunc*><size_t>(addressof(python_cfunctype_callback)))
+    return RESULT_OK

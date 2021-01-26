@@ -5,6 +5,25 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "C++: host",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/host/host",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/build",
+            "environment": [ { "name": "PYTHONPATH", "value": "${workspaceFolder}/build:${PYTHONPATH}" } ],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+        {
             "name": "Python: callbacks.py",
             "type": "python",
             "request": "launch",

@@ -35,7 +35,7 @@ add_dependencies(cython_bindings python_bindings)
 
 # Add top level native target
 add_library(${PROJECT_NAME} SHARED 
-    main.cpp
+    nativelib.cpp
     ${CMAKE_CURRENT_BINARY_DIR}/cythoncallbacks.c) # Include generated Cython source
 
 add_dependencies(${PROJECT_NAME} python_bindings)
@@ -52,3 +52,5 @@ target_include_directories(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME}
     PUBLIC
         ${Python3_LIBRARIES})
+
+add_subdirectory(host)
