@@ -67,11 +67,10 @@ NativeResult Call_Callback(NativeLibHdl libHdl, NativeCallbacksHdl callbacksHdl)
         !callbacksHdl ||
         !callbacksHdl->callback)
         return RESULT_INVALID_ARGS;
-    CallbackFunc callback = *(callbacksHdl->callback);
     
     try
     {
-        return callback(libHdl);
+        return callbacksHdl->callback(libHdl);
     }
     catch(const std::exception& e)
     {

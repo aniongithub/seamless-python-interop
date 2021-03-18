@@ -68,5 +68,5 @@ typedef CallbackFunc* CallbackFuncHdl;
 // Declare our forward declared struct now
 struct NativeCallbacks
 {
-    CallbackFuncHdl callback;
+    CallbackFunc callback;
 };

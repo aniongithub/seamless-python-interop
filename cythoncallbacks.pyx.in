@@ -16,5 +16,5 @@ cdef public NativeResult Getcallbacks_Cython(NativeLibHdl libHdl, CallbackParams
     def python_cfunctype_callback(libHdl):
         return foo(libHdl)
 
-    callbacksHdl.callback = (<CallbackFunc*><size_t>(addressof(python_cfunctype_callback)))
+    callbacksHdl.callback = ((<CallbackFunc*><size_t>(addressof(python_cfunctype_callback)))[0])
     return RESULT_OK
